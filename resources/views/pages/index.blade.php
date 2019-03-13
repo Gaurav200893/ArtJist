@@ -757,6 +757,22 @@
     </div>
 </section>
 
+<script type="text/javascript">
+    var CSRF_TOKEN = $('meta[name="_token"]').attr('content')
+     $.ajax({
+                    /* the route pointing to the post function */
+                    url: '/posts',
+                    type: 'GET',
+                    /* send the csrf-token and the input to the controller */
+                    data: {_token: CSRF_TOKEN, message:$(".getinfo").val()},
+                    dataType: 'JSON',
+                    /* remind that 'data' is the response of the AjaxController */
+                    success: function (data) { 
+                        $(".writeinfo").append(data.msg); 
+                    }
+                }); 
+</script>
+
 {{-- Content End --}}
 
 
