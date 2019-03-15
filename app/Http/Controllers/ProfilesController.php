@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Schema;
 
 use Illuminate\Http\Request;
+use App\Profile;
 
 class ProfilesController extends Controller
 {
@@ -11,9 +13,33 @@ class ProfilesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+    
+        $profile = Profile:: where("user_id", $request->session()->get('user_id'))->first();
+        if($profile){
+            $profile = $profile->attributesToArray();
+        }else{
+            $profile = Profile:: firstOrNew(["user_id" => $request->session()->get('user_id')]);
+
+            $columns = Schema::getColumnListing($profile->getTable());
+            $columns = array_fill_keys($columns, null);
+            $profile = array_merge($columns, $profile->attributesToArray());
+        }
+
+
+        $key_elements = array(
+            'user_id' => '<input class="user_id" />',
+            'type'  => '<input class="type" />',
+            'gender'  => '<input class="gender" />',
+            'country'  => '<input class="country" />',
+            'city'  => '<input class="city" />',
+            'zipcode'  => '<input class="zipcode" />',
+            'medium'  => '<input class="medium" />'
+        );
+        
+        
+        return view('users.index')->with(['profile' => $profile]);
     }
 
     /**
@@ -45,7 +71,30 @@ class ProfilesController extends Controller
      */
     public function show($id)
     {
-        //
+        $profile = Profile:: where("user_id", $id)->first();
+        if($profile){
+            $profile = $profile->attributesToArray();
+        }else{
+            $profile = Profile:: firstOrNew(["user_id" => $id]);
+
+            $columns = Schema::getColumnListing($profile->getTable());
+            $columns = array_fill_keys($columns, null);
+            $profile = array_merge($columns, $profile->attributesToArray());
+        }
+
+
+        $key_elements = array(
+            'user_id' => '<input class="user_id" />',
+            'type'  => '<input class="type" />',
+            'gender'  => '<input class="gender" />',
+            'country'  => '<input class="country" />',
+            'city'  => '<input class="city" />',
+            'zipcode'  => '<input class="zipcode" />',
+            'medium'  => '<input class="medium" />'
+        );
+        
+        
+        return view('users.index')->with(['profile' => $profile]);
     }
 
     /**
